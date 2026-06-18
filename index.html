@@ -26,6 +26,86 @@
   body { background: #0A0E1A; -webkit-font-smoothing: antialiased; }
   ::selection { background: rgba(201,169,110,0.3); color: #F5F0E8; }
 
+  /* ===== 키프레임 ===== */
+  @keyframes sc-fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes sc-btnPulse {
+    0%, 100% { box-shadow: 0 6px 24px rgba(201,169,110,0.32); }
+    50%       { box-shadow: 0 8px 44px rgba(201,169,110,0.72), 0 0 28px rgba(232,201,138,0.38); }
+  }
+
+  /* 히어로 순차 페이드업 */
+  [data-hero-anim] { opacity: 0; }
+  [data-hero-anim].sc-ready {
+    animation: sc-fadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  /* CTA 펄스 글로우 */
+  [data-cta-pulse] { animation: sc-btnPulse 2.6s ease-in-out infinite; }
+
+  /* 조감도 스크롤 줌 */
+  [data-aerial] img {
+    transform: scale(1);
+    transition: transform 1.6s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+  }
+  [data-aerial].sc-zoomed img { transform: scale(1.05); }
+
+  /* 스태거 카드 (입지 특징 카드) */
+  [data-stagger] {
+    opacity: 0;
+    transform: translateY(26px);
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  [data-stagger].sc-visible { opacity: 1; transform: translateY(0); }
+
+  /* 테넌트 카드 호버 리프트 + 골드 보더 드로우 */
+  [data-tenant-card] {
+    position: relative;
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.4s ease !important;
+  }
+  [data-tenant-card]:hover {
+    transform: translateY(-6px) !important;
+    box-shadow: 0 18px 44px rgba(0,0,0,0.38) !important;
+  }
+  [data-tenant-card]::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 5px;
+    border: 1.5px solid #C9A96E;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+  }
+  [data-tenant-card]:hover::after { opacity: 1; }
+
+  /* 평면도 크로스페이드 */
+  [data-floor-content] { transition: opacity 0.26s ease; }
+
+  /* 핵심 수치 카운터 바 */
+  [data-count-bar] {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: rgba(201,169,110,0.16);
+    border: 1px solid rgba(201,169,110,0.16);
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 48px;
+  }
+
+  @media (max-width: 960px) {
+    [data-count-bar] { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 560px) {
+    [data-count-bar] { grid-template-columns: 1fr 1fr; }
+  }
+
   @media (max-width: 960px) {
     [data-r="2col"]    { grid-template-columns: 1fr !important; }
     [data-r="feat"]    { grid-template-columns: 1fr 1fr !important; }
@@ -108,21 +188,21 @@
     </div>
   <div data-r="2col" style="position: relative; max-width: 1320px; margin: 0 auto; padding: 0 40px; width: 100%; display: grid; grid-template-columns: 1.12fr 0.88fr; gap: 64px; align-items: center;">
       <div style="display: block">
-        <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 28px;">
+        <div data-hero-anim style="animation-delay:0ms; display: flex; align-items: center; gap: 14px; margin-bottom: 28px;">
           <span style="width: 38px; height: 1px; background: #C9A96E;"></span>
           <span style="font-size: 12px; letter-spacing: 0.3em; color: #C9A96E;">EXCLUSIVE · 선착순 분양 / 임대 마감 임박</span>
         </div>
-        
-        <h1 data-r="hero-h1" style="font-family: 'Noto Sans KR', sans-serif; font-weight: 300; font-size: 40px; line-height: 1.18; letter-spacing: -0.02em; color: #F5F0E8; margin-bottom: 14px;">평택 브레인시티<br><span data-r="hero-h1-big" style="font-weight: 700; font-size: 60px; color: #FFFFFF;">11자 핵심상권의 완성</span></h1><p data-r="hero-sub" style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 32px; color: #C9A96E; letter-spacing: 0.02em; margin-bottom: 28px;">BrainCity Eleven Tower</p>
-        <p style="font-size: 16px; line-height: 1.9; color: #C4C8D2; max-width: 500px; font-weight: 300; margin-bottom: 18px;">아주대학교 병원 · KAIST · K-반도체가 완성하는 자족도시. <strong style="color: #E8C98A; font-weight: 500;">6만~7만 배후수요</strong>가 증명하는 단 하나의 11자(字) 핵심상권.</p>
-        <p style="font-size: 14px; line-height: 1.7; color: #8A90A0; max-width: 500px; font-weight: 300; margin-bottom: 40px;">선호도 높은 전면 호실의 잔여가 빠르게 마감되고 있습니다. 지금 실시간 방문예약을 통해 평택의 미래를 먼저 선점하십시오.</p>
-        <div style="display: flex; gap: 16px; flex-wrap: wrap;">
-          <button onClick="{{ openReserve }}" style="cursor: pointer; font-family: inherit; border: none; background: linear-gradient(135deg, #E8C98A, #C9A96E); color: #0A0E1A; font-size: 14.5px; font-weight: 700; letter-spacing: 0.02em; padding: 17px 34px; border-radius: 3px; box-shadow: 0 6px 24px rgba(201,169,110,0.3); transition: all 0.3s;" style-hover="box-shadow: 0 8px 30px rgba(201,169,110,0.5); transform: translateY(-1px);">실시간 방문예약 신청</button>
+
+        <h1 data-hero-anim data-r="hero-h1" style="animation-delay:160ms; font-family: 'Noto Sans KR', sans-serif; font-weight: 300; font-size: 40px; line-height: 1.18; letter-spacing: -0.02em; color: #F5F0E8; margin-bottom: 14px;">평택 브레인시티<br><span data-r="hero-h1-big" style="font-weight: 700; font-size: 60px; color: #FFFFFF;">11자 핵심상권의 완성</span></h1><p data-hero-anim data-r="hero-sub" style="animation-delay:320ms; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 32px; color: #C9A96E; letter-spacing: 0.02em; margin-bottom: 28px;">BrainCity Eleven Tower</p>
+        <p data-hero-anim style="animation-delay:440ms; font-size: 16px; line-height: 1.9; color: #C4C8D2; max-width: 500px; font-weight: 300; margin-bottom: 18px;">아주대학교 병원 · KAIST · K-반도체가 완성하는 자족도시. <strong style="color: #E8C98A; font-weight: 500;">6만~7만 배후수요</strong>가 증명하는 단 하나의 11자(字) 핵심상권.</p>
+        <p data-hero-anim style="animation-delay:560ms; font-size: 14px; line-height: 1.7; color: #8A90A0; max-width: 500px; font-weight: 300; margin-bottom: 40px;">선호도 높은 전면 호실의 잔여가 빠르게 마감되고 있습니다. 지금 실시간 방문예약을 통해 평택의 미래를 먼저 선점하십시오.</p>
+        <div data-hero-anim style="animation-delay:700ms; display: flex; gap: 16px; flex-wrap: wrap;">
+          <button data-cta-pulse onClick="{{ openReserve }}" style="cursor: pointer; font-family: inherit; border: none; background: linear-gradient(135deg, #E8C98A, #C9A96E); color: #0A0E1A; font-size: 14.5px; font-weight: 700; letter-spacing: 0.02em; padding: 17px 34px; border-radius: 3px; transition: transform 0.3s;" style-hover="transform: translateY(-2px);">실시간 방문예약 신청</button>
           <a href="#units" style="text-decoration: none; border: 1px solid rgba(201,169,110,0.5); color: #E8C98A; font-size: 14px; letter-spacing: 0.04em; padding: 16px 30px; border-radius: 3px; display: flex; align-items: center; gap: 10px; transition: all 0.3s;" style-hover="border-color: #C9A96E; background: rgba(201,169,110,0.08);">상가 안내 보기</a>
         </div>
       </div>
 
-      <div data-r="statnums" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+      <div data-hero-anim data-r="statnums" style="animation-delay:860ms; display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
         <div style="border: 1px solid rgba(201,169,110,0.18); background: rgba(255,255,255,0.015); padding: 30px 26px; border-radius: 3px;">
           <div style="font-family: Poppins; font-size: 46px; font-weight: 400; color: #E8C98A; line-height: 1"><span style="font-size: 28px; margin-left: 4px; position: static; font-family: Roboto;" data-om-label="ㄴㄴ">11자</span></div>
           <div style="font-size: 12.5px; color: #8A90A0; margin-top: 10px">핵심상권 동선</div>
@@ -150,7 +230,7 @@
     </div>
 
     <!-- 조감도 showcase -->
-    <div style="position: relative; border: 1px solid rgba(201,169,110,0.18); border-radius: 5px; overflow: hidden; margin-bottom: 24px;">
+    <div data-aerial style="position: relative; border: 1px solid rgba(201,169,110,0.18); border-radius: 5px; overflow: hidden; margin-bottom: 24px;">
       <img src="images/aerial.webp" alt="브레인시티 일레븐타워 조감도 — 아주대병원·카이스트 등 밀집학세권" width="1228" height="713" loading="lazy" decoding="async" style="display: block; width: 100%; height: auto;">
       <div style="position: absolute; inset: 0; box-shadow: inset 0 0 120px rgba(10,14,26,0.45); pointer-events: none;"></div>
       <div style="position: absolute; left: 0; bottom: 0; padding: 22px 26px; background: linear-gradient(0deg, rgba(8,11,20,0.82), transparent);"><div style="font-family: monospace; font-size: 10.5px; color: rgba(201,169,110,0.75); letter-spacing: 0.12em;">AERIAL VIEW · 조감도</div><div style="font-size: 14px; color: #F5F0E8; margin-top: 5px; font-weight: 400;">완벽한 입지에 압도적 수요를 더하다 — 12개 단지 약 16,000세대 배후</div></div>
@@ -162,15 +242,15 @@
         <div style="position: absolute; right: 14px; top: 14px; display: flex; align-items: center; gap: 7px; background: rgba(8,11,20,0.7); border: 1px solid rgba(201,169,110,0.3); border-radius: 99px; padding: 7px 14px;"><span style="width: 5px; height: 5px; background: #C9A96E; border-radius: 50%;"></span><span style="font-size: 11px; color: #E8C98A; letter-spacing: 0.04em;">위치도 · 크게 보기</span></div>
       </div>
       <div style="display: flex; flex-direction: column; gap: 18px;">
-        <div style="border: 1px solid rgba(201,169,110,0.18); border-radius: 4px; padding: 26px 28px;">
+        <div data-stagger style="border: 1px solid rgba(201,169,110,0.18); border-radius: 4px; padding: 26px 28px;">
           <div style="font-size: 11px; letter-spacing: 0.2em; color: #C9A96E; margin-bottom: 12px;">SELF-SUFFICIENT CITY</div>
           <p style="font-size: 13.5px; line-height: 1.7; color: #B7BCC8; font-weight: 300;">산업·교육·의료가 함께하는 자족도시 — 통학거리가 짧고 최신식 시설, 여유로운 학습환경을 갖춘 신도시입니다.</p>
         </div>
-        <div style="border: 1px solid rgba(201,169,110,0.18); border-radius: 4px; padding: 26px 28px;">
+        <div data-stagger style="border: 1px solid rgba(201,169,110,0.18); border-radius: 4px; padding: 26px 28px;">
           <div style="font-size: 11px; letter-spacing: 0.2em; color: #C9A96E; margin-bottom: 12px;">BACKED DEMAND</div>
           <p style="font-size: 13.5px; line-height: 1.7; color: #B7BCC8; font-weight: 300;">첨단산업단지와 약 2만 5천 세대 아파트, 인구 6만~7만의 배후수요가 상권을 떠받칩니다.</p>
         </div>
-        <div style="border: 1px solid rgba(201,169,110,0.18); border-radius: 4px; padding: 26px 28px; background: rgba(201,169,110,0.04);">
+        <div data-stagger style="border: 1px solid rgba(201,169,110,0.18); border-radius: 4px; padding: 26px 28px; background: rgba(201,169,110,0.04);">
           <div style="font-size: 11px; letter-spacing: 0.2em; color: #C9A96E; margin-bottom: 12px;">11-SHAPE STREET</div>
           <p style="font-size: 13.5px; line-height: 1.7; color: #B7BCC8; font-weight: 300;">두 동이 마주 보는 11자(字) 동선 위 핵심상권 — 유동인구가 집중되는 가장 강력한 입지에 자리합니다.</p>
         </div>
@@ -186,9 +266,29 @@
         <h2 style="font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: 46px; color: #F5F0E8; margin-top: 14px;">입점 확정 앵커시설</h2>
         <p style="font-size: 13px; color: #8A90A0; margin-top: 12px; letter-spacing: 0.04em;">평택 브레인시티 (1단계) 입주기업 및 입점 확정업체</p>
       </div>
+      <!-- 핵심 수치 카운터 바 -->
+      <div data-count-bar>
+        <div style="background: #0A0E1A; padding: 28px 20px; text-align: center;">
+          <div style="font-family: 'Cormorant Garamond', serif; font-size: 36px; color: #E8C98A; line-height: 1;"><span data-count="60000" data-suffix="만+">–</span></div>
+          <div style="font-size: 11.5px; color: #8A90A0; margin-top: 8px; letter-spacing: 0.08em;">배후 수요 인구</div>
+        </div>
+        <div style="background: #0A0E1A; padding: 28px 20px; text-align: center;">
+          <div style="font-family: 'Cormorant Garamond', serif; font-size: 36px; color: #E8C98A; line-height: 1;"><span data-count="25000" data-suffix="세대">–</span></div>
+          <div style="font-size: 11.5px; color: #8A90A0; margin-top: 8px; letter-spacing: 0.08em;">배후 아파트</div>
+        </div>
+        <div style="background: #0A0E1A; padding: 28px 20px; text-align: center;">
+          <div style="font-family: 'Cormorant Garamond', serif; font-size: 36px; color: #E8C98A; line-height: 1;"><span data-count="2030" data-suffix="" data-raw="2030">–</span></div>
+          <div style="font-size: 11.5px; color: #8A90A0; margin-top: 8px; letter-spacing: 0.08em;">앵커시설 입점 완료</div>
+        </div>
+        <div style="background: #0A0E1A; padding: 28px 20px; text-align: center;">
+          <div style="font-family: 'Cormorant Garamond', serif; font-size: 36px; color: #E8C98A; line-height: 1;"><span data-count="11" data-suffix="자 상권">–</span></div>
+          <div style="font-size: 11.5px; color: #8A90A0; margin-top: 8px; letter-spacing: 0.08em;">핵심 동선</div>
+        </div>
+      </div>
+
       <div data-r="feat" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
         <sc-for list="{{ tenants }}" as="t" hint-placeholder-count="4">
-          <div style="border: 1px solid rgba(201,169,110,0.18); border-radius: 5px; overflow: hidden; transition: background 0.4s; display: flex; flex-direction: column;" style-hover="background: rgba(201,169,110,0.05);">
+          <div data-tenant-card style="border: 1px solid rgba(201,169,110,0.18); border-radius: 5px; overflow: hidden; transition: background 0.4s; display: flex; flex-direction: column;" style-hover="background: rgba(201,169,110,0.05);">
             <div style="position: relative; height: 168px; background: #0A0E1A; display: flex; align-items: center; justify-content: center; overflow: hidden; border-bottom: 1px solid rgba(201,169,110,0.14);">
               <div style="position: absolute; inset: 0; background-image: linear-gradient(rgba(201,169,110,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(201,169,110,0.05) 1px, transparent 1px); background-size: 30px 30px;"></div>
               <sc-if value="{{ t.isLogo }}" hint-placeholder-val="">
@@ -245,7 +345,7 @@
       </sc-for>
     </div>
 
-    <div data-r="2col" style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 40px; align-items: stretch;">
+    <div data-floor-content data-r="2col" style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 40px; align-items: stretch;">
       <!-- plan viewer -->
       <div style="position: relative; min-height: 440px; border: 1px solid rgba(201,169,110,0.18); border-radius: 4px; background: #0A0E1A; overflow: hidden; display: flex; align-items: center; justify-content: center; cursor: zoom-in;" onClick="{{ openPlan }}">
         <img src="{{ selectedFloor.img }}" alt="{{ selectedFloor.planLabel }} 평면도" loading="lazy" decoding="async" style="position: relative; width: 100%; height: 100%; object-fit: contain; background: #ffffff;">
@@ -354,7 +454,7 @@
       <div style="font-size: 12px; letter-spacing: 0.3em; color: #8A90A0; margin-bottom: 16px;">분양·임대 문의 — 평택 센타장 김성희</div>
       <a href="tel:010-8228-0143" data-r="phone" style="text-decoration: none; font-family: 'Cormorant Garamond', serif; font-size: 56px; font-weight: 500; color: #E8C98A; letter-spacing: 0.05em; display: inline-block; transition: color 0.3s;" style-hover="color: #F5F0E8;">010 — 8228 — 0143</a>
       <div style="margin-top: 36px;">
-        <button onClick="{{ openReserve }}" style="cursor: pointer; font-family: inherit; border: none; background: linear-gradient(135deg, #E8C98A, #C9A96E); color: #0A0E1A; font-size: 15px; font-weight: 700; letter-spacing: 0.02em; padding: 17px 44px; border-radius: 4px; box-shadow: 0 6px 24px rgba(201,169,110,0.3); transition: all 0.3s;" style-hover="box-shadow: 0 8px 30px rgba(201,169,110,0.5); transform: translateY(-1px);">실시간 방문예약 신청하기</button>
+        <button data-cta-pulse onClick="{{ openReserve }}" style="cursor: pointer; font-family: inherit; border: none; background: linear-gradient(135deg, #E8C98A, #C9A96E); color: #0A0E1A; font-size: 15px; font-weight: 700; letter-spacing: 0.02em; padding: 17px 44px; border-radius: 4px; transition: transform 0.3s;" style-hover="transform: translateY(-2px);">실시간 방문예약 신청하기</button>
       </div>
     </div>
   </section>
@@ -471,7 +571,7 @@
       <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 16px;">
         <div style="font-size: 11px; letter-spacing: 0.2em; color: #8A90A0;">CONTACT</div>
         <a href="tel:010-8228-0143" style="text-decoration: none; font-family: 'Cormorant Garamond', serif; font-size: 22px; color: #E8C98A; letter-spacing: 0.04em;">010-8228-0143</a>
-        <div style="font-size: 12px; color: #6E7484;">병점 센타장 김성희</div>
+        <div style="font-size: 12px; color: #6E7484;">평택 센타장 김성희</div>
       </div>
     </div>
   </footer>
@@ -522,11 +622,75 @@ class Component extends DCLogic {
         document.querySelectorAll('[data-reveal]').forEach(reveal);
       }
     }
+
+    // 히어로 순차 페이드업 (페이지 로드 직후 딜레이별 실행)
+    requestAnimationFrame(() => {
+      document.querySelectorAll('[data-hero-anim]').forEach((el) => {
+        const delay = parseFloat(el.style.animationDelay) || 0;
+        setTimeout(() => el.classList.add('sc-ready'), delay);
+      });
+    });
+
+    // 조감도 스크롤 줌
+    try {
+      const aerialEl = document.querySelector('[data-aerial]');
+      if (aerialEl) {
+        this._ioAerial = new IntersectionObserver((entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) { aerialEl.classList.add('sc-zoomed'); this._ioAerial.unobserve(aerialEl); }
+          });
+        }, { threshold: 0.2 });
+        this._ioAerial.observe(aerialEl);
+      }
+    } catch (e) {}
+
+    // 입지 특징 카드 스태거
+    try {
+      const staggerEls = [...document.querySelectorAll('[data-stagger]')];
+      this._ioStagger = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            const order = staggerEls.indexOf(e.target);
+            setTimeout(() => e.target.classList.add('sc-visible'), order * 130);
+            this._ioStagger.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.15 });
+      staggerEls.forEach((el) => this._ioStagger.observe(el));
+    } catch (e) {}
+
+    // 핵심 수치 카운터
+    const easeOut = (t) => 1 - Math.pow(1 - t, 3);
+    const animCount = (el) => {
+      const isRaw = el.hasAttribute('data-raw');
+      const target = parseInt(el.getAttribute('data-count'), 10);
+      const suffix = el.getAttribute('data-suffix') || '';
+      const dur = 1600;
+      const start = performance.now();
+      const tick = (now) => {
+        const pct = Math.min((now - start) / dur, 1);
+        const val = Math.round(easeOut(pct) * target);
+        el.textContent = isRaw ? String(target) + suffix : val.toLocaleString('ko-KR') + suffix;
+        if (pct < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    };
+    try {
+      this._ioCounter = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) { animCount(e.target); this._ioCounter.unobserve(e.target); }
+        });
+      }, { threshold: 0.3 });
+      document.querySelectorAll('[data-count]').forEach((el) => this._ioCounter.observe(el));
+    } catch (e) {}
   }
 
   componentWillUnmount() {
     window.removeEventListener('scroll', this._onScroll);
     if (this._io) this._io.disconnect();
+    if (this._ioAerial) this._ioAerial.disconnect();
+    if (this._ioStagger) this._ioStagger.disconnect();
+    if (this._ioCounter) this._ioCounter.disconnect();
     if (this._failsafe) clearTimeout(this._failsafe);
     this._teardownLightbox();
   }
@@ -636,7 +800,15 @@ class Component extends DCLogic {
       supply: u.supply,
       img: u.img,
       label: i + 1 + '층',
-      onClick: () => this.setState({ floor: i }),
+      onClick: () => {
+          const fc = document.querySelector('[data-floor-content]');
+          if (fc) {
+            fc.style.opacity = '0';
+            setTimeout(() => { this.setState({ floor: i }); fc.style.opacity = '1'; }, 260);
+          } else {
+            this.setState({ floor: i });
+          }
+        },
       style: i === floor
         ? tabBase + ' background: #C9A96E; color: #0A0E1A; border: 1px solid #C9A96E;'
         : tabBase + ' background: transparent; color: #8A90A0; border: 1px solid rgba(201,169,110,0.25);',
