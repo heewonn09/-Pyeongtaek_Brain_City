@@ -1,4 +1,4 @@
-const { SolapiMessageService } = require('solapi');
+const crypto = require('crypto');
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
@@ -20,20 +20,35 @@ module.exports = async (req, res) => {
     `관심층: ${floor || '미지정'}`,
   ].join('\n');
 
-  const messageService = new SolapiMessageService(
-    process.env.SOLAPI_API_KEY,
-    process.env.SOLAPI_API_SECRET
-  );
-
+  const apiKey    = process.env.SOLAPI_API_KEY;
+  const apiSecret = process.env.SOLAPI_API_SECRET;
   const toPhone   = (process.env.TO_PHONE   || '').replace(/\D/g, '');
   const fromPhone = (process.env.FROM_PHONE || '').replace(/\D/g, '');
 
+  const dateStr   = new Date().toISOString();
+  const salt      = crypto.randomBytes(16).toString('hex');
+  const signature = crypto.createHmac('sha256', apiSecret).update(dateStr + salt).digest('hex');
+  const authorization = `HMAC-SHA256 apiKey=${apiKey}, date=${dateStr}, salt=${salt}, signature=${signature}`;
+
   try {
-    await messageService.sendOne({
-      to:   toPhone,
-      from: fromPhone,
-      text,
+    const response = await fetch('https://api.solapi.com/messages/v4/send', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+      body: JSON.stringify({
+        message: { to: toPhone, from: fromPhone, text },
+      }),
     });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error('Solapi 오류:', JSON.stringify(data));
+      return res.status(500).json({ ok: false, error: data.message || 'SMS 전송 실패' });
+    }
+
     res.json({ ok: true });
   } catch (err) {
     console.error('SMS 전송 오류:', err.message || err);
