@@ -25,10 +25,13 @@ module.exports = async (req, res) => {
     process.env.SOLAPI_API_SECRET
   );
 
+  const toPhone   = (process.env.TO_PHONE   || '').replace(/\D/g, '');
+  const fromPhone = (process.env.FROM_PHONE || '').replace(/\D/g, '');
+
   try {
     await messageService.sendOne({
-      to: process.env.TO_PHONE,
-      from: process.env.FROM_PHONE,
+      to:   toPhone,
+      from: fromPhone,
       text,
     });
     res.json({ ok: true });
